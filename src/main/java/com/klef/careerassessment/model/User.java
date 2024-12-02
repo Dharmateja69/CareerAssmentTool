@@ -38,6 +38,8 @@ public class User {
 
     @Column(name = "is_instructor", nullable = false)
     private boolean isInstructor;
+    
+    
 
     // Getters and Setters
 

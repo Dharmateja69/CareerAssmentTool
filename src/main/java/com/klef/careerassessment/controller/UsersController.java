@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,10 +79,18 @@ public class UsersController {
 	}
 
 	@GetMapping("/admin-dashboard")
-	public String admindashboardview() {
-		return "admin-Dashboard";
-	}
+	public String showAdminDashboard(HttpServletRequest request, Model model) {
+	    // Check if the user is logged in and add to the model
+	    User user = (User) request.getSession().getAttribute("user");
 
+	    if (user != null) {
+	        model.addAttribute("user", user);  // Add the user to the model for use in the JSP
+	        return "admin-Dashboard";  // Show the admin dashboard page
+	    } else {
+	        // If user is not found, redirect to the login page
+	        return "redirect:/users/login";
+	    }
+	}
 	@GetMapping("/Logout")
 	public String Logout(HttpSession session, RedirectAttributes redirectAttributes) {
 		session.invalidate();
@@ -128,6 +137,31 @@ public class UsersController {
 			return "create-admin";
 		}
 	}
+	
+	// Endpoint to search users
+	@GetMapping("/search")
+	public String searchUsers(@RequestParam String query, HttpSession session, Model model) {
+	    // Check if an admin is logged in
+	    User loggedInUser = (User) session.getAttribute("user");
+	    if (loggedInUser == null || !loggedInUser.isAdmin()) {
+	        // If no user is logged in or the user is not an admin, redirect to an error page or login page
+	        return "error-page"; // Replace with your error JSP view
+	    }
+
+	    // Perform the search
+	    List<User> users = userService.searchUser(query);
+	    if (users.isEmpty()) {
+	        model.addAttribute("message", "No users found.");
+	        return "users-list"; // Return users-list.jsp with no results but a message
+	    }
+
+	    // Add users to the model and return the view
+	    model.addAttribute("users", users);
+	    return "users-list"; // Replace with the name of your JSP file
+	}
+
+
+
 
 	@GetMapping("/all")
 	public String showAllUsers(HttpSession session, Model model) {

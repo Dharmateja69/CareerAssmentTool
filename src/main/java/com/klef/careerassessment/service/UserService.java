@@ -116,4 +116,10 @@ public class UserService {
             return HttpStatus.INTERNAL_SERVER_ERROR; // Error
         }
     }
+
+	public List<User> searchUser(String query) {
+		// TODO Auto-generated method stub
+	    return userRepository.searchUser(query);
+
+	}
 }
