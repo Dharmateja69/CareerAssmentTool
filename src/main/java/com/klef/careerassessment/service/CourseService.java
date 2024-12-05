@@ -109,6 +109,10 @@ public class CourseService {
 	            return new ArrayList<>();
 	        }
 	    }
+	    
+	    
+	  
+
 
 	    /**
 	     * Retrieves a course by its ID.
@@ -245,6 +249,11 @@ public class CourseService {
 		public List<Courses> searchCoursesByName(String courseName) {
 			// TODO Auto-generated method stub
 			return courseRepo.searchCoursesByName(courseName);
+		}
+
+		public List<Courses> getCoursesByFieldOfInterest(String fieldOfInterest) {
+			// TODO Auto-generated method stub
+			return courseRepo.findCoursesByFieldOfInterest(fieldOfInterest);
 		}
 	
 	

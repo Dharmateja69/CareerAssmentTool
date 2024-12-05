@@ -39,7 +39,7 @@
             <a href="<%= request.getContextPath() %>/courses/getcourse"><button>Get All Courses</button></a>
         </div>
 
-        <!-- Search Option -->
+        <!-- Search Option for Users -->
         <form action="<%= request.getContextPath() %>/users/search" method="get">
             <label for="query">Search Users:</label>
             <input type="text" id="query" name="query" placeholder="Enter name or email" required>
@@ -50,6 +50,20 @@
         <div class="actions">
             <a href="<%= request.getContextPath() %>/courses/add-course"><button>Upload a Course</button></a>
         </div>
+        
+        <!-- Search form for Category -->
+        <form action="<%= request.getContextPath() %>/courses/category" method="get">
+            <label for="category">Search by Category:</label>
+            <input type="text" id="category" name="category" placeholder="Enter Category Name" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <!-- Search form for Course ID -->
+        <form action="<%= request.getContextPath() %>/courses/userCount" method="get">
+            <label for="courseId">Enter Course ID:</label>
+            <input type="number" id="courseId" name="courseId" placeholder="Course ID" required>
+            <button type="submit">Search</button>
+        </form>
        
         <% 
         } else { 

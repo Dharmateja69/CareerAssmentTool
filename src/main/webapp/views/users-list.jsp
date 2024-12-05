@@ -15,8 +15,19 @@
 </head>
 <body>
     <h2>All Registered Users</h2>
+
+    <!-- Search Form -->
+    <form action="/courses/c" method="get">
+        <label for="userId">Search Registered Courses by User ID:</label>
+        <input type="number" id="userId" name="userId" placeholder="Enter User ID" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br/>
+
     <table border="1">
         <tr>
+            <th>Id</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
@@ -27,6 +38,7 @@
         </tr>
         <c:forEach var="user" items="${users}">
             <tr>
+                <td>${user.id}</td>
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
                 <td>${user.email}</td>
@@ -34,9 +46,7 @@
                 <td>${user.hobbies != null ? user.hobbies : 'N/A'}</td>
                 <td>${user.fieldOfInterest != null ? user.fieldOfInterest : 'N/A'}</td>
                 <td>
-                    <a href="/users/update/${user.id}">
-                        <button>Edit</button>
-                    </a>
+                    
                     <button onclick="confirmDelete(${user.id})">Delete</button>
                 </td>
             </tr>

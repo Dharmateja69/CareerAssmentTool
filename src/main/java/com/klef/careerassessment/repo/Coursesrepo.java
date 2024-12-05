@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.klef.careerassessment.model.Courses;
+import com.klef.careerassessment.model.User;
 
 @Repository
 public interface Coursesrepo extends JpaRepository<Courses,Long>{
@@ -19,4 +20,6 @@ public interface Coursesrepo extends JpaRepository<Courses,Long>{
 	 @Query("SELECT c FROM Courses c WHERE c.title LIKE %:courseName%")
 	    List<Courses> searchCoursesByName(@Param("courseName") String courseName);
 	
+	 @Query("SELECT c FROM Courses c WHERE c.category = ?1")
+	 List<Courses> findCoursesByFieldOfInterest(String fieldOfInterest);
 }

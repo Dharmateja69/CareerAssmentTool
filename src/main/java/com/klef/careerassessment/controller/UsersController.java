@@ -58,6 +58,7 @@ public class UsersController {
 			// Store the user in session
 			http.getSession().setAttribute("user", user);
 			// Check if user is admin and redirect accordingly
+			http.getSession().setAttribute("loggedInUserId", user.getId());
 			if (user.isAdmin()) {
 				model.addAttribute("message", "Welcome Admin, " + user.getEmail() + "!");
 				return "admin-Dashboard";
@@ -74,8 +75,13 @@ public class UsersController {
 	}
 
 	@GetMapping("/user-dashboard")
-	public String userDashboardView() {
-		return "user-Dashboard";
+	public String userDashboardView(HttpSession session) {
+	    User user = (User) session.getAttribute("user");// Replace "user" with your session attribute key
+	    if (user != null && !user.isAdmin()) { 
+	        return "user-Dashboard";
+	    } else {
+	        return "error-page";
+	    }
 	}
 
 	@GetMapping("/admin-dashboard")
@@ -188,27 +194,37 @@ public class UsersController {
 		return userService.findByEmail(email);
 	}
 
-	@GetMapping("/update/{id}")
-	public String UpdateView(@PathVariable Long id, Model model) {
-		// Fetch the user by ID
-		User user = userService.findbyId(id);
+	 @GetMapping("/update/{id}")
+	    public String updateView(@PathVariable Long id, Model model) {
+	        // Fetch the user by ID
+	        User user = userService.findbyId(id);
 
-		if (user != null) {
-			// Add the user object to the model for use in the JSP view
-			model.addAttribute("user", user);
-			return "update-user"; // Return the update-user.jsp view
-		} else {
-			// If user not found, redirect to an error page or some other view
-			return "error"; // Adjust this based on your error handling strategy
-		}
-	}
+	        if (user != null) {
+	            // Add the user object to the model for use in the JSP view
+	            model.addAttribute("user", user);
+	            return "update-user"; // Return the update-user.jsp view
+	        } else {
+	            // If user not found, redirect to an error page or some other view
+	            model.addAttribute("error", "User not found");
+	            return "error"; // Adjust this based on your error handling strategy
+	        }
+	    }
 
-	@PostMapping("/update/{id}")
-	public String updateUser(@PathVariable Long id, @ModelAttribute User updatedUser) {
-		userService.updateUser(id, updatedUser);
-		System.out.println("updated successfully !!!");
-		return "redirect:/users/all"; // After successful update, redirect to the user list
-	}
+	    @PostMapping("/update/{id}")
+	    public String updateUser(@PathVariable Long id, @ModelAttribute User updatedUser) {
+	        // Ensure that the user exists before updating
+	        User existingUser = userService.findbyId(id);
+	        
+	        if (existingUser != null) {
+	            // Update user information
+	            userService.updateUser(id, updatedUser);
+	            System.out.println("Updated successfully!");
+	            return "redirect:/users/user-dashboard"; // After successful update, redirect to the user list
+	        } else {
+	            // If the user is not found, handle the error (you can redirect to an error page or show a message)
+	            return "redirect:/users/error"; // Example of error handling
+	        }
+	    }
 
 	@GetMapping("/delete/{id}")
 	public String confirmDeleteUser(@PathVariable Long id, Model model) {
