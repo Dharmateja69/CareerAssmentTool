@@ -1,9 +1,9 @@
 package com.klef.careerassessment.model;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
 @Entity
-
 @Table(name = "Users")
 public class User {
 
@@ -38,8 +38,18 @@ public class User {
 
     @Column(name = "is_instructor", nullable = false)
     private boolean isInstructor;
+
     
+    @Lob
+    @Column(name = "resume_file", columnDefinition = "LONGBLOB")
+    private byte[] resumeFile;
+
     
+    @Column(name = "last_login")
+    private Date lastLogin; // Last login timestamp
+
+    @Column(name = "resume_url")
+    private String resumeUrl; // Link to the user's resume
 
     // Getters and Setters
 
@@ -122,4 +132,28 @@ public class User {
     public void setInstructor(boolean isInstructor) {
         this.isInstructor = isInstructor;
     }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public String getResumeUrl() {
+        return resumeUrl;
+    }
+
+    public void setResumeUrl(String resumeUrl) {
+        this.resumeUrl = resumeUrl;
+    }
+
+	public byte[] getResumeFile() {
+		return resumeFile;
+	}
+
+	public void setResumeFile(byte[] resumeFile) {
+		this.resumeFile = resumeFile;
+	}
 }

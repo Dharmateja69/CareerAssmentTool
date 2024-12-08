@@ -131,38 +131,38 @@ public class CourseController {
 	    return "redirect:/courses/register-course";
 	}
 
-	// Deregister a user from a course
-	@DeleteMapping("/{courseId}/{userId}/dr")
-	public ResponseEntity<String> deregisterUserFromCourse(@PathVariable Long courseId, @PathVariable Long userId) {
-		Courses course = courseService.getCourseById(courseId);
-		if (course == null) {
-			return new ResponseEntity<>("Course not found", HttpStatus.NOT_FOUND);
-		}
-		
-
-		User user = courseService.getUserById(userId);
-		if (user == null) {
-			return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-		}
-
-		HttpStatus status = courseService.deregisterUserFromCourse(course, user);
-		if (status == HttpStatus.OK) {
-			return new ResponseEntity<>("User deregistered successfully", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>("Error deregistering user", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	// Deregister a user from a course
+//	@DeleteMapping("/{courseId}/{userId}/dr")
+//	public ResponseEntity<String> deregisterUserFromCourse(@PathVariable Long courseId, @PathVariable Long userId) {
+//		Courses course = courseService.getCourseById(courseId);
+//		if (course == null) {
+//			return new ResponseEntity<>("Course not found", HttpStatus.NOT_FOUND);
+//		}
+//		
+//
+//		User user = courseService.getUserById(userId);
+//		if (user == null) {
+//			return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+//		}
+//
+//		HttpStatus status = courseService.deregisterUserFromCourse(course, user);
+//		if (status == HttpStatus.OK) {
+//			return new ResponseEntity<>("User deregistered successfully", HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>("Error deregistering user", HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	// Get all users registered for a course
-	@GetMapping("/{courseId}/users")
-	public ResponseEntity<List<User>> getUsersRegisteredToCourse(@PathVariable Long courseId) {
-		Courses course = courseService.getCourseById(courseId);
-		if (course == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		List<User> registeredUsers = courseService.getUsersRegisteredToCourse(course);
-		return new ResponseEntity<>(registeredUsers, HttpStatus.OK);
-	}
+//	@GetMapping("/{courseId}/users")
+//	public ResponseEntity<List<User>> getUsersRegisteredToCourse(@PathVariable Long courseId) {
+//		Courses course = courseService.getCourseById(courseId);
+//		if (course == null) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//		List<User> registeredUsers = courseService.getUsersRegisteredToCourse(course);
+//		return new ResponseEntity<>(registeredUsers, HttpStatus.OK);
+//	}
 
 	// Get all courses
 	@GetMapping("/getcourse")
@@ -184,16 +184,16 @@ public class CourseController {
 		}
 	}
 
-	// Get a course by ID
-	@GetMapping("/{courseId}")
-	public ResponseEntity<Courses> getCourseById(@PathVariable Long courseId) {
-		Courses course = courseService.getCourseById(courseId);
-		if (course != null) {
-			return new ResponseEntity<>(course, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+//	// Get a course by ID
+//	@GetMapping("/{courseId}")
+//	public ResponseEntity<Courses> getCourseById(@PathVariable Long courseId) {
+//		Courses course = courseService.getCourseById(courseId);
+//		if (course != null) {
+//			return new ResponseEntity<>(course, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//	}
 
 	@GetMapping("update/{courseId}")
 	public String showEditCourseForm(@PathVariable Long courseId, Model model, @SessionAttribute("user") User user) {
@@ -387,4 +387,12 @@ public class CourseController {
 //		return new ResponseEntity<>(courses, HttpStatus.OK);
 //	}
 
+	
+	
+	
+	  // Handle GET request to display the help form
+   
+	
+	
+	
 }

@@ -8,10 +8,10 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -165,7 +165,27 @@ public class UsersController {
 	    model.addAttribute("users", users);
 	    return "users-list"; // Replace with the name of your JSP file
 	}
+	 @GetMapping("/about")
+	    public String aboutPage(Model model) {
+	        model.addAttribute("pageTitle", "About Us");
+	        // Add any other attributes needed for the About page
+	        return "AboutUs"; // Returns the `about.html` template
+	    }
 
+	    @GetMapping("/pricing")
+	    public String pricingPage(Model model) {
+	        model.addAttribute("pageTitle", "Pricing Plans");
+	        // Add any other attributes needed for the Pricing page
+	        return "pricing"; // Returns the `pricing.html` template
+	    }
+
+	    @GetMapping("/courses")
+	    public String coursesPage(Model model) {
+	        model.addAttribute("pageTitle", "Courses");
+	        // You can pass the list of courses from the service layer here
+	        // Example: model.addAttribute("courses", courseService.getAllCourses());
+	        return "courses"; // Returns the `courses.html` template
+	    }
 
 
 
@@ -248,4 +268,84 @@ public class UsersController {
 			return HttpStatus.UNAUTHORIZED; // Invalid credentials
 		}
 	}
+	
+	
+	
+	@GetMapping("/uploadResume")
+	public String showUploadResumeForm(HttpSession session, Model model) {
+	    // Retrieve the logged-in user object from the session
+	    User loggedInUser = (User) session.getAttribute("user");
+
+	    if (loggedInUser == null) {
+	        // User not logged in, redirect to login page
+	        model.addAttribute("message", "You must be logged in to upload a resume.");
+	        return "redirect:/users/login";
+	    }
+
+	    if (loggedInUser.isAdmin()) {
+	        // Admins are not allowed to upload resumes
+	        model.addAttribute("message", "Admins are not allowed to upload resumes.");
+	        return "redirect:/users/user-dashboard"; // Redirect to user dashboard
+	    }
+
+	    // Add logged-in user details to the model if needed
+	    model.addAttribute("userId", loggedInUser.getId());
+
+	    return "uploadResume"; // Return the JSP page for uploading resumes
+	}
+
+	@PostMapping("/uploadResume")
+	public String uploadResume(@RequestParam("resumeFile") MultipartFile resumeFile, HttpSession session) {
+	    // Retrieve the logged-in user object from the session
+	    User loggedInUser = (User) session.getAttribute("user");
+
+	    if (loggedInUser == null || loggedInUser.isAdmin()) {
+	        // User not logged in or is an admin
+	        return "error-page"; // Forbidden access
+	    }
+	    System.out.println(loggedInUser.getId());
+
+	    // Validate the resume file (PDF format and size <= 2MB)
+	    if (!resumeFile.getContentType().equals("application/pdf")) {
+	        return "error-page"; // Invalid file format
+	    }
+	    if (resumeFile.getSize() > 2 * 1024 * 1024) {
+	        return "error-page"; // File size exceeds 2MB
+	    }
+	    userService.uploadResume(loggedInUser.getId(), resumeFile);
+	    // Save the resume using the logged-in user's ID
+	    return "redirect:/users/user-dashboard";
+	}
+
+	
+	 @GetMapping("/help")
+	    public String showHelpForm(Model model) {
+	        // You can add some data to the model to show on the JSP page if needed
+	        model.addAttribute("helpMessage", "Welcome to the help section. Fill out the form below.");
+	        return "help"; // This will resolve to help.jsp
+	    }
+
+	    // Handle POST request when the form is submitted
+	    @PostMapping("/help")
+	    public String submitHelpForm(@RequestParam String name, 
+	                                 @RequestParam String email, 
+	                                 @RequestParam String message, 
+	                                 Model model) {
+	        // Process the form data and send a confirmation message
+	        // For example, you can save the data or send it via email
+	        
+	        // Simulate handling the help request and sending a confirmation message
+	        String responseMessage = "Thank you, " + name + ". We have received your message and will get back to you at " + email + ".";
+
+	        // Add the response message to the model
+	        model.addAttribute("responseMessage", responseMessage);
+
+	        // Return a view that displays the response message (could be a confirmation page)
+	        return "helpResponse"; // Create a new JSP for response, e.g., helpResponse.jsp
+	    }
+	
+	
+	
+	
+	
 }

@@ -5,6 +5,8 @@ import com.klef.careerassessment.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 //import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,30 @@ public class UserService {
         }
     }
     
+    
+    
+ //
+    public HttpStatus uploadResume(Long userId, MultipartFile resumeFile) {
+	    try {
+	        // Retrieve user from the database
+	        User user = userRepository.findById(userId).orElse(null);
+	        if (user == null) {
+	            return HttpStatus.NOT_FOUND; // User not found
+	        }
+	        
+	        // Convert the resume file into a byte array
+	        byte[] resumeFileData = resumeFile.getBytes();
+	        
+	        // Store the resume file as BLOB in the database
+	        user.setResumeFile(resumeFileData);
+	        userRepository.save(user);
+	        
+	        return HttpStatus.OK; // File uploaded successfully
+	    } catch (Exception ex) {
+	        return HttpStatus.INTERNAL_SERVER_ERROR; // Error occurred
+	    }
+	}
+
     
 
     // Method to get all users
